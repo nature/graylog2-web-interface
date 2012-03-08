@@ -67,6 +67,11 @@ class User
     find(:first, :conditions => {:login => login})
   end
 
+  def self.find_or_create_by_login!(login, extra_attributes={})
+    user = find_by_login(login)
+    user || create!(extra_attributes.merge(:login => login))
+  end
+
   def login=(value)
     write_attribute :login, (value ? value.downcase : nil)
   end
