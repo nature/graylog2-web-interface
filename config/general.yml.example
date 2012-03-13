@@ -13,6 +13,8 @@ ldap:
   encryption: start_tls
   port: 389
   base: ou=People,dc=mycompany,dc=com
+  username_attr: sAMAccountName
+  bind_domain_name: yourcompany
 
 # Settings for stream subscription emails.
 subscriptions:
