@@ -12,7 +12,10 @@ class LdapAuthenticationTest < ActiveSupport::TestCase
   end
 
   setup do
-    @existing_user   = User.make(:login => 'existing_user')
+    @existing_user            = User.make(:login => 'existing_user', :email => 'existing@test.com', :name => 'Existing User')
+    @existing_user_ldap_entry = mock()
+    @existing_user_ldap_entry.stubs(:mail => ['existing@test.com'], :displayname => ['Existing User'])
+
     @mock_ldap_entry = mock()
     @mock_ldap_entry.stubs(:mail => ['clowder@gmail.com'], :displayname => ['Chris Lowder'])
   end
@@ -23,7 +26,6 @@ class LdapAuthenticationTest < ActiveSupport::TestCase
     assert_difference 'User.count' do
       user = UserWithLdap.authenticate("clowder", "foobar")
 
-
       assert_equal "clowder",           user.login
       assert_equal "clowder@gmail.com", user.email
       assert_equal "Chris Lowder",      user.name
@@ -32,7 +34,7 @@ class LdapAuthenticationTest < ActiveSupport::TestCase
   end
 
   def test_should_not_create_local_user_for_returning_ldap_users
-    UserWithLdap.stubs(:ldap_login).returns(@mock_ldap_entry)
+    UserWithLdap.stubs(:ldap_login).returns(@existing_user_ldap_entry)
 
     assert_no_difference 'User.count' do
       user = UserWithLdap.authenticate("existing_user", "anything")
@@ -47,6 +49,17 @@ class LdapAuthenticationTest < ActiveSupport::TestCase
     assert_no_difference 'User.count' do
       user = UserWithLdap.authenticate("clowder", "clowder123")
       assert_equal nil, user
+    end
+  end
+
+  def test_users_are_updated_if_their_remote_details_change
+    UserWithLdap.stubs(:ldap_login).returns(@mock_ldap_entry)
+
+    assert_no_difference 'User.count' do
+      user = UserWithLdap.authenticate(@existing_user.login, "anything")
+
+      assert_equal 'Chris Lowder',      user.name
+      assert_equal 'clowder@gmail.com', user.email
     end
   end
 end
