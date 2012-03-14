@@ -26,7 +26,7 @@ module LdapAuthentication
         user.update_attribute(:from_ldap, true)
         user
       else
-        nil
+        authenticate_without_ldap(login, password)
       end
     end
 
