@@ -18,8 +18,8 @@ module LdapAuthentication
 
       if authenticated_user
         password = "not needed for ldap"
-        user     = find_or_create_by_login!(login, { :email                 => authenticated_user.mail.first,
-                                                     :name                  => authenticated_user.try(::Configuration.ldap_displayname_attribute.to_sym).first,
+        user     = find_or_create_by_login!(login, { :email                 => authenticated_user['mail'].first,
+                                                     :name                  => authenticated_user[::Configuration.ldap_displayname_attribute].first,
                                                      :password              => password,
                                                      :password_confirmation => password,
                                                      :role                  => User::STANDARD_ROLE,
@@ -66,7 +66,7 @@ module LdapAuthentication
     def new_ldap_session
       Net::LDAP.new(:host       => ::Configuration.ldap_host,
                     :port       => ::Configuration.ldap_port,
-                    :encryption => ::Configuration.ldap_encryption.try(:to_sym),
+                    :encryption => ::Configuration.ldap_encryption,
                     :base       => ::Configuration.ldap_base)
     end
 
@@ -98,7 +98,7 @@ module LdapAuthentication
     end
 
     def ldap_displayname_attribute
-      ldap_config :displayname_attribute, :displayname
+      ldap_config :displayname_attribute, 'displayname'
     end
 
     def ldap_username_attribute

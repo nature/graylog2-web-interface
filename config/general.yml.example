@@ -10,7 +10,7 @@ ldap:
   enabled: false
   host: ldap.mycompany.com
   base: ou=People,dc=mycompany,dc=com
-#   encryption: start_tls
+#   encryption: :start_tls
 #   port: 389
 #   username_attribute: email
 #   displayname_attribute: displayname
