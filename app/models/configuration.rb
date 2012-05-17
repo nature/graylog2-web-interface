@@ -2,6 +2,7 @@ class Configuration
   @general_config = YAML::load File.read(Rails.root.to_s + "/config/general.yml")
   @email_config = YAML::load File.read(Rails.root.to_s + "/config/email.yml")
   @indexer_config = YAML::load File.read(Rails.root.to_s + "/config/indexer.yml")
+  @ldap_config = YAML::load File.read(Rails.root.to_s + "/config/ldap.yml")
 
   def self.config_value(root, nesting, key, default = nil)
     [root, root[nesting.to_s], root[nesting.to_s][key.to_s]].any?(&:blank?) ? default : root[nesting.to_s][key.to_s]
@@ -125,4 +126,41 @@ class Configuration
   def self.indexer_index_name
     indexer_config :index_name
   end
+
+  def self.ldap_config(key, default = nil)
+    config_value @ldap_config, :ldap, key, default
+  end
+
+  def self.ldap_enabled?
+    ldap_config :enabled, false
+  end
+
+  def self.ldap_host
+    ldap_config :host
+  end
+
+  def self.ldap_port
+    ldap_config :port, 389
+  end
+
+  def self.ldap_base
+    ldap_config :base
+  end
+
+  def self.ldap_encryption
+    ldap_config :encryption
+  end
+
+  def self.ldap_displayname_attribute
+    ldap_config :displayname_attribute, :displayname
+  end
+
+  def self.ldap_username_attribute
+    ldap_config :username_attribute, 'uid'
+  end
+
+  def self.ldap_can_search_anonymously?
+    ldap_config :can_search_anonymously, true
+  end
+
 end

@@ -6,16 +6,6 @@ general:
   # custom_cookie_name: graylog2_staging1 # Set an own cookie name - Useful for multiple deployments on same host like example.org/staging1/graylog2, example.org/staging2/graylog2
   # hide_message_stats: false # Hide the message statistics at the top of the messages page.
 
-ldap:
-  enabled: false
-  host: ldap.mycompany.com
-  base: ou=People,dc=mycompany,dc=com
-#   encryption: :start_tls
-#   port: 389
-#   username_attribute: email
-#   displayname_attribute: displayname
-#   can_search_anonymously: true # Defaults to true. If you set this to false you MUST ensure that you set your 'base' properly
-
 # Settings for stream subscription emails.
 subscriptions:
   from: graylog2subscriptions@example.org
