@@ -1,4 +1,4 @@
-Graylog2WebInterface::Application.config.authentication_stratigies = [BasicAuthentication]
+Graylog2WebInterface::Application.config.authentication_strategies = [BasicAuthentication]
 
 if Configuration.ldap_enabled?
   Graylog2WebInterface::Application.config.authentication_strategies.unshift(LdapAuthentication)
