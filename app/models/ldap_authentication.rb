@@ -5,7 +5,10 @@ class LdapAuthentication
   end
 
   def credentials
-    @credentials ||= if user
+    # Make sure that we dont allow users to bind with a blank password, even if we
+    # have anonymous binding turned on.
+    # https://github.com/ruby-ldap/ruby-net-ldap/issues/5
+    @credentials ||= if @password.present? && user
       email = user['mail'].first
       name  = user[::Configuration.ldap_displayname_attribute].first
       Authenticator::Credentials.new(@login, email, name, true)
@@ -30,7 +33,7 @@ class LdapAuthentication
       # authenticate you with your user dn before we try and search for your
       # account (dn example. `uid=clowder,ou=People,dc=mycompany,dc=com`).
       user_dn = [user_filter, ::Configuration.ldap_base].join(',')
-      args.merge({ :auth => { :username => user_dn, :password => @password, :method => :simple } })
+      args.merge!({ :auth => { :username => user_dn, :password => @password, :method => :simple } })
     end
 
     args
