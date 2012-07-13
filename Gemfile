@@ -18,6 +18,8 @@ gem 'SystemTimer', '~> 1.2.3', :require => 'system_timer', :platforms => :ruby_1
 gem 'rails_autolink', '~> 1.0.4'
 gem 'kaminari', '~> 0.12.4'
 gem 'net-ldap', '~> 0.3.1'
+gem 'unicorn'
+gem 'foreman'
 
 group :development, :test do
   # might be useful to generate fake data in development
